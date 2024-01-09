@@ -41,32 +41,8 @@ class AppCameraSession: NSObject {
     private(set) var supportedDevices = [AVCaptureDeviceInfo]()
     
     private var captureContinuation: CheckedContinuation<Bool, Never>? = nil
-    
     private let previewQueue = DispatchQueue(label: "preview_queue")
-    
     private let main = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-    
-    var isUsingProRawOnMainDevice: Bool {
-        let raw = photoOutput?.isAppleProRAWEnabled ?? false
-        return raw && self.device?.modelID == main?.modelID
-    }
-    
-    var supportFlash: Bool {
-        guard let device = self.device else {
-            // If the device is not setup yet, we assume it supports flash.
-            return true
-        }
-        return device.hasFlash == true && device.isFlashAvailable == true
-    }
-    
-    var supportProRaw: Bool {
-        guard let photoOutput = self.photoOutput else {
-            return false
-        }
-        
-        let availableFormats = photoOutput.availableRawPhotoPixelFormatTypes
-        return availableFormats.first { AVCapturePhotoOutput.isAppleProRAWPixelFormat($0) } != nil
-    }
     
     init(settings: CameraSettings, processor: CameraProcessor) {
         self.cameraSettings = settings
@@ -250,28 +226,6 @@ class AppCameraSession: NSObject {
         }
         
         videoOutput.setSampleBufferDelegate(self, queue: previewQueue)
-    }
-    
-    func releaseTemperature() {
-        guard let device = self.device else {
-            return
-        }
-        
-        do {
-            defer {
-                device.unlockForConfiguration()
-            }
-            
-            try device.lockForConfiguration()
-            
-            if device.isWhiteBalanceModeSupported(.autoWhiteBalance) {
-                device.whiteBalanceMode = .autoWhiteBalance
-            } else if device.isWhiteBalanceModeSupported(.continuousAutoWhiteBalance) {
-                device.whiteBalanceMode = .continuousAutoWhiteBalance
-            }
-        } catch {
-            // ignored
-        }
     }
     
     func zoom(factor: CGFloat, animated: Bool) {
