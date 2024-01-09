@@ -54,20 +54,38 @@ struct CameraSettingsView: View {
     @ObservedObject var cameraSettings: CameraSettings
     
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                Button {
-                    cameraSettings.useRaw.toggle()
-                } label: {
-                    Text(cameraSettings.useRaw ? "RAW on" : "RAW off")
+        VStack {
+            ScrollView(.horizontal) {
+                HStack {
+                    Button {
+                        cameraSettings.useRaw.toggle()
+                    } label: {
+                        Text(cameraSettings.useRaw ? "RAW on" : "RAW off")
+                    }
+                    
+                    Button {
+                        cameraSettings.zoomedIn.toggle()
+                    } label: {
+                        Text(cameraSettings.zoomedIn ? "1.5x" : "1x")
+                    }
                 }
-                
-                Button {
-                    cameraSettings.fixRawShift.toggle()
-                } label: {
-                    Text(cameraSettings.fixRawShift ? "Fix Raw shift on" : "Fix Raw shift off")
+            }
+            
+            ScrollView(.horizontal) {
+                HStack {
+                    Button {
+                        cameraSettings.fixRawShift.toggle()
+                    } label: {
+                        Text(cameraSettings.fixRawShift ? "Fix Raw shift" : "Not Fix Raw shift")
+                    }
+                    
+                    Button {
+                        cameraSettings.fixZoomedExposure.toggle()
+                    } label: {
+                        Text(cameraSettings.fixZoomedExposure ? "Fix Zoom Exp" : "Not Fix Zoom Exp")
+                    }
                 }
-            }.buttonStyle(.borderedProminent)
-        }
+            }
+        }.buttonStyle(.borderedProminent)
     }
 }

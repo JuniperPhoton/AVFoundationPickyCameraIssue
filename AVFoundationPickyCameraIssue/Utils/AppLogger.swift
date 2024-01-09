@@ -10,4 +10,5 @@ import OSLog
 
 class AppLogger {
     static let camera = Logger(subsystem: "com.juniperphoton.demo", category: "camera")
+    static let photoLibrary = Logger(subsystem: "com.juniperphoton.demo", category: "photoLibrary")
 }

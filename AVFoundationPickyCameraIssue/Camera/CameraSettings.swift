@@ -10,4 +10,6 @@ import Foundation
 class CameraSettings: ObservableObject {
     @Published var useRaw = true
     @Published var fixRawShift = false
+    @Published var fixZoomedExposure = false
+    @Published var zoomedIn = false
 }

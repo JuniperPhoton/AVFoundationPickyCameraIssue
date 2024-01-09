@@ -12,12 +12,13 @@ class MainViewModel: ObservableObject {
     let renderer: MetalRenderer = MetalRenderer()
     let cameraSettings: CameraSettings = CameraSettings()
     let camSession: AppCameraSession
+    let processor: CameraProcessor = CameraProcessor()
     
     private var cancellables = [AnyCancellable]()
-
+    
     init() {
         renderer.initializeCIContext(colorSpace: nil, name: "preview")
-        camSession = AppCameraSession(settings: cameraSettings)
+        camSession = AppCameraSession(settings: cameraSettings, processor: processor)
         
         cameraSettings.$fixRawShift.receive(on: DispatchQueue.main)
             .sink { [weak self] output in
@@ -28,6 +29,19 @@ class MainViewModel: ObservableObject {
                     self.applyZoomFactorFix()
                 } else {
                     self.resetZoomFactorFix()
+                }
+            }
+            .store(in: &cancellables)
+        
+        cameraSettings.$zoomedIn.receive(on: DispatchQueue.main)
+            .sink { [weak self] output in
+                guard let self = self else {
+                    return
+                }
+                if output {
+                    camSession.zoom(factor: 1.5, animated: true)
+                } else {
+                    camSession.zoom(factor: 1, animated: true)
                 }
             }
             .store(in: &cancellables)
@@ -62,6 +76,10 @@ class MainViewModel: ObservableObject {
         
         if cameraSettings.fixRawShift {
             applyZoomFactorFix()
+        }
+        
+        if cameraSettings.zoomedIn {
+            camSession.zoom(factor: 1.5, animated: false)
         }
     }
     

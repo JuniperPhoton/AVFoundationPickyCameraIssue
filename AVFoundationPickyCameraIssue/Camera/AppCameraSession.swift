@@ -27,6 +27,7 @@ class AppCameraSession: NSObject {
     var zoomedFactor = 1.0
     
     let cameraSettings: CameraSettings
+    let processor: CameraProcessor
     
     private var triggerFirstFrameCallback = false
     
@@ -67,8 +68,9 @@ class AppCameraSession: NSObject {
         return availableFormats.first { AVCapturePhotoOutput.isAppleProRAWPixelFormat($0) } != nil
     }
     
-    init(settings: CameraSettings) {
+    init(settings: CameraSettings, processor: CameraProcessor) {
         self.cameraSettings = settings
+        self.processor = processor
     }
     
     func stop() async -> Bool {
@@ -277,6 +279,8 @@ class AppCameraSession: NSObject {
             return
         }
         
+        self.zoomedFactor = factor
+        
         do {
             defer {
                 device.unlockForConfiguration()
@@ -386,7 +390,7 @@ class AppCameraSession: NSObject {
             // If we uses 1.2 or 1.5x zoom scale factor and the maximum 48MP dimensions,
             // the output photo's exposure and the preview's won't match.
             // Change the maxPhotoDimensions can fix this issue.
-            if zoomedFactor > 1.0 {
+            if zoomedFactor > 1.0 && cameraSettings.fixZoomedExposure {
                 dimensions = min
             } else {
                 dimensions = max
@@ -443,6 +447,7 @@ extension AppCameraSession: AVCapturePhotoCaptureDelegate {
     ) {
         AppLogger.camera.log("photoOutput willCapturePhotoFor")
         onBeginCapture?()
+        processor.onBeginCaptured(resolvedSettings: resolvedSettings)
     }
     
     func photoOutput(
@@ -450,7 +455,6 @@ extension AppCameraSession: AVCapturePhotoCaptureDelegate {
         didCapturePhotoFor resolvedSettings: AVCaptureResolvedPhotoSettings
     ) {
         AppLogger.camera.log("photoOutput didCapturePhotoFor")
-        // todo
     }
     
     func photoOutput(
@@ -459,7 +463,15 @@ extension AppCameraSession: AVCapturePhotoCaptureDelegate {
         error: Error?
     ) {
         AppLogger.camera.log("photoOutput didFinishProcessingPhoto, isRawPhoto \(photo.isRawPhoto) error \(error)")
-        // todo
+        if error == nil {
+            if processor.onCaptured(photo: photo) {
+                captureContinuation?.resume(returning: true)
+                captureContinuation = nil
+            }
+        } else {
+            captureContinuation?.resume(returning: false)
+            captureContinuation = nil
+        }
     }
     
     func photoOutput(

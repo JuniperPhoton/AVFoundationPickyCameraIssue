@@ -19,6 +19,7 @@
 		225F87732B4D94CA008D5FD7 /* ViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F87702B4D94C9008D5FD7 /* ViewRepresentable.swift */; };
 		225F87752B4D96FC008D5FD7 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F87742B4D96FC008D5FD7 /* MainViewModel.swift */; };
 		225F87772B4D9760008D5FD7 /* CameraSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F87762B4D9760008D5FD7 /* CameraSettings.swift */; };
+		225F87792B4D9C1B008D5FD7 /* CameraProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225F87782B4D9C1B008D5FD7 /* CameraProcessor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		225F87702B4D94C9008D5FD7 /* ViewRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewRepresentable.swift; sourceTree = "<group>"; };
 		225F87742B4D96FC008D5FD7 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		225F87762B4D9760008D5FD7 /* CameraSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSettings.swift; sourceTree = "<group>"; };
+		225F87782B4D9C1B008D5FD7 /* CameraProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraProcessor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				225F876D2B4D94BF008D5FD7 /* Metal */,
 				225F87642B4D9209008D5FD7 /* AppCameraSession.swift */,
 				225F87762B4D9760008D5FD7 /* CameraSettings.swift */,
+				225F87782B4D9C1B008D5FD7 /* CameraProcessor.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				225F87652B4D9209008D5FD7 /* AppCameraSession.swift in Sources */,
 				225F87682B4D92A8008D5FD7 /* AppLogger.swift in Sources */,
 				225F876A2B4D9321008D5FD7 /* CamAuthorization.swift in Sources */,
+				225F87792B4D9C1B008D5FD7 /* CameraProcessor.swift in Sources */,
 				225F87752B4D96FC008D5FD7 /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,6 +336,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -372,6 +378,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
