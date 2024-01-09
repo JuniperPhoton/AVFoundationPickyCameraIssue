@@ -350,15 +350,23 @@ class AppCameraSession: NSObject {
         AppLogger.camera.log("capture photo availableRawPhotoPixelFormatTypes: \(availableFormats.count)")
         
         let proRawFormat = availableFormats.first { AVCapturePhotoOutput.isAppleProRAWPixelFormat($0) }
+        let bayerRawFormat = availableFormats.first { AVCapturePhotoOutput.isBayerRAWPixelFormat($0) }
         
+        var rawFormat: OSType? = proRawFormat ?? bayerRawFormat
         let processedFormat = [AVVideoCodecKey: AVVideoCodecType.hevc]
         
+        if zoomedFactor != 1.0 {
+            rawFormat = nil
+        }
+        
         // Retrieve the RAW format, favoring the Apple ProRAW format when it's in an enabled state.
-        if cameraSettings.useRaw, let proRawFormat = proRawFormat {
+        if cameraSettings.useRaw, let rawFormat = rawFormat {
             AppLogger.camera.log("capture using raw")
             
-            photoSettings = AVCapturePhotoSettings(rawPixelFormatType: proRawFormat,
-                                                   processedFormat: processedFormat)
+            photoSettings = AVCapturePhotoSettings(
+                rawPixelFormatType: rawFormat,
+                processedFormat: processedFormat
+            )
             
             // Select the first available codec type, which is JPEG.
             // This type is used as raw thumbnail.

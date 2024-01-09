@@ -14,6 +14,8 @@ class MainViewModel: ObservableObject {
     let camSession: AppCameraSession
     let processor: CameraProcessor = CameraProcessor()
     
+    @Published var showCaptureAnimation = false
+    
     private var cancellables = [AnyCancellable]()
     
     init() {
@@ -62,9 +64,22 @@ class MainViewModel: ObservableObject {
             return
         }
         
-        camSession.onPreview = { image in
+        camSession.onPreview = { [weak self] image in
+            guard let self = self else {
+                return
+            }
             DispatchQueue.main.async {
                 self.renderer.requestChanged(displayedImage: image)
+            }
+        }
+        
+        camSession.onBeginCapture = { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.toggleCaptureAnimation()
             }
         }
         
@@ -97,5 +112,12 @@ class MainViewModel: ObservableObject {
     
     private func resetZoomFactorFix() {
         camSession.zoom(factor: 1.0, animated: false)
+    }
+    
+    private func toggleCaptureAnimation() {
+        showCaptureAnimation = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.showCaptureAnimation = false
+        }
     }
 }

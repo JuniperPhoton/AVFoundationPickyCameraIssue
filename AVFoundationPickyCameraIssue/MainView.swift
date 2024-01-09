@@ -15,6 +15,11 @@ struct MainView: View {
         VStack {
             CameraSettingsView(cameraSettings: viewModel.cameraSettings)
             MetalView(renderer: viewModel.renderer, enableSetNeedsDisplay: false)
+                .overlay {
+                    if viewModel.showCaptureAnimation {
+                        Color.black
+                    }
+                }
             CameraControlView(viewModel: viewModel)
         }.onChange(of: scenePhase) { scenePhase in
             switch scenePhase {
