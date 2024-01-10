@@ -304,14 +304,14 @@ class AppCameraSession: NSObject {
         AppLogger.camera.log("capture photo availableRawPhotoPixelFormatTypes: \(availableFormats.count)")
         
         let proRawFormat = availableFormats.first { AVCapturePhotoOutput.isAppleProRAWPixelFormat($0) }
-        let bayerRawFormat = availableFormats.first { AVCapturePhotoOutput.isBayerRAWPixelFormat($0) }
-        
-        var rawFormat: OSType? = proRawFormat ?? bayerRawFormat
-        let processedFormat = [AVVideoCodecKey: AVVideoCodecType.hevc]
+        var bayerRawFormat = availableFormats.first { AVCapturePhotoOutput.isBayerRAWPixelFormat($0) }
         
         if zoomedFactor != 1.0 {
-            rawFormat = nil
+            bayerRawFormat = nil
         }
+        
+        let rawFormat: OSType? = proRawFormat ?? bayerRawFormat
+        let processedFormat = [AVVideoCodecKey: AVVideoCodecType.hevc]
         
         // Retrieve the RAW format, favoring the Apple ProRAW format when it's in an enabled state.
         if cameraSettings.useRaw, let rawFormat = rawFormat {
